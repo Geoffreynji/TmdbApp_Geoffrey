@@ -75,7 +75,7 @@ fun Screen(windowClass: WindowSizeClass, navController: NavController) {
                     )
                 }
                 FilledButton(onClick = {
-                    navController.navigate("Films")
+                    navController.navigate(FilmsDestination())
                 })
             }
         }
@@ -135,7 +135,7 @@ fun Screen(windowClass: WindowSizeClass, navController: NavController) {
                         )
                     }
                     FilledButton(onClick = {
-                        navController.navigate("Films")
+                        navController.navigate(FilmsDestination())
                     })
 
                 }

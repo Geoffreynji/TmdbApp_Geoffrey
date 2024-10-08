@@ -22,14 +22,22 @@ import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
+
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.graphics.Color
+import androidx.navigation.compose.NavHost
 
+import androidx.navigation.compose.currentBackStackEntryAsState
+import kotlinx.serialization.Serializable
+
+@Serializable class ProfilDestination
+@Serializable class FilmsDestination
+@Serializable class SeriesDestination
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,12 +46,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
             val navController = rememberNavController()
+            val navBackStackEntry by navController.currentBackStackEntryAsState()
+            //val currentDestination = navBackStackEntry?.ProfilDestination
             Screen(windowSizeClass, navController)
             PremiereApplicationTheme {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     topBar = {
                         //Mettre condition ici pour ne pas afficher barre navigation sur page d'acceuil
+                        // Afficher la TopBar sauf si on est sur l'écran "Profil"
                             MyTopBar()
                     },
                     bottomBar = {
@@ -65,10 +76,10 @@ class MainActivity : ComponentActivity() {
     fun AppNavigation(navController: NavHostController, modifier: Modifier = Modifier) {
         val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
         val viewModel: MainViewModel = viewModel()
-        NavHost(navController = navController, startDestination = "Profil") {
-            composable("Films") { Films(viewModel) }
-            composable("Profil") { Screen(windowSizeClass, navController) }
-            composable("Series") { Series() }
+        NavHost(navController = navController, startDestination = ProfilDestination()) {
+            composable<FilmsDestination> { Films(viewModel) }
+            composable<ProfilDestination> { Screen(windowSizeClass, navController) }
+            composable<SeriesDestination> { Series() }
         }
     }
 
