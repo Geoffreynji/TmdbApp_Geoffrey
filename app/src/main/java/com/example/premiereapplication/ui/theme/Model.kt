@@ -5,6 +5,11 @@ data class TmdbMovieResult(
     val results: List<TmdbMovie>
 )
 
+data class TmdbSeriesResult(
+    val page: Int,
+    val results: List<TmdbSeries>
+)
+
 data class TmdbMovie(
     val backdrop_path: String,
     val genre_ids: List<Int>,
@@ -14,4 +19,11 @@ data class TmdbMovie(
     val poster_path: String,
     val release_date: String,
     val title: String
+)
+
+data class TmdbSeries(
+    val id: Int,
+    val name: String,
+    val overview: String,
+    val poster_path: String?  // Utilise ? pour gérer les cas où le chemin de l'affiche peut être nul
 )

@@ -13,6 +13,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 class MainViewModel : ViewModel() {
 
     val movies = MutableStateFlow<List<TmdbMovie>>(listOf())
+    val series = MutableStateFlow<List<TmdbSeries>>(listOf())
 
     // Initialiser Retrofit
     val retrofit = Retrofit.Builder()
@@ -33,5 +34,28 @@ class MainViewModel : ViewModel() {
                 e.printStackTrace()
             }
     }
+    }
+
+    fun searchFilms(query: String) {
+        viewModelScope.launch {
+            try {
+                val result = api.searchMovies(apiKey, query)  // Appel réseau pour rechercher le film par titre
+                movies.value = result.results                 // Mettre à jour l'état avec les résultats de la recherche
+            } catch (e: Exception) {
+                e.printStackTrace()  // Gestion des erreurs
+            }
+        }
+    }
+
+    // Récupérer les séries TV
+    fun getSeries() {
+        viewModelScope.launch {
+            try {
+                val result = api.trendingSeries(apiKey)
+                series.value = result.results  // Met à jour la liste des séries
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 }
