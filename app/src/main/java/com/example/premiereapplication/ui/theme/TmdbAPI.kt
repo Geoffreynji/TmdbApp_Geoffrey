@@ -17,4 +17,8 @@ interface Api {
     @GET("trending/tv/week")
     suspend fun trendingSeries(@Query("api_key") api_key: String): TmdbSeriesResult
 
+    @GET("trending/person/week")  // Endpoint pour récupérer les acteurs
+    suspend fun getTrendingActors(@Query("api_key") api_key: String): TmdbActorResult
+
+
 }

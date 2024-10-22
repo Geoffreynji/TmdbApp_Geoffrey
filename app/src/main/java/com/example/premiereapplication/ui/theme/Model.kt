@@ -10,6 +10,10 @@ data class TmdbSeriesResult(
     val results: List<TmdbSeries>
 )
 
+data class TmdbActorResult(
+    val results: List<TmdbActor>
+)
+
 data class TmdbMovie(
     val backdrop_path: String,
     val genre_ids: List<Int>,
@@ -26,4 +30,10 @@ data class TmdbSeries(
     val name: String,
     val overview: String,
     val poster_path: String?  // Utilise ? pour gérer les cas où le chemin de l'affiche peut être nul
+)
+
+data class TmdbActor(
+    val id: Int,
+    val name: String,
+    val profile_path: String?  // Chemin vers l'image de profil
 )

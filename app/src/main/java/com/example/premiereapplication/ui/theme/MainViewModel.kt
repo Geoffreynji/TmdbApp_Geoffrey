@@ -14,6 +14,7 @@ class MainViewModel : ViewModel() {
 
     val movies = MutableStateFlow<List<TmdbMovie>>(listOf())
     val series = MutableStateFlow<List<TmdbSeries>>(listOf())
+    val actors = MutableStateFlow<List<TmdbActor>>(listOf())
 
     // Initialiser Retrofit
     val retrofit = Retrofit.Builder()
@@ -53,6 +54,17 @@ class MainViewModel : ViewModel() {
             try {
                 val result = api.trendingSeries(apiKey)
                 series.value = result.results  // Met à jour la liste des séries
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun getActors() {
+        viewModelScope.launch {
+            try {
+                val result = api.getTrendingActors(apiKey)  // Méthode d'API pour récupérer les acteurs
+                actors.value = result.results // Vérifie que result.results est une List<TmdbActor>
             } catch (e: Exception) {
                 e.printStackTrace()
             }

@@ -98,6 +98,7 @@ class MainActivity : ComponentActivity() {
             composable<FilmsDestination> { Films(viewModel) }
             composable<ProfilDestination> { Screen(windowSizeClass, navController) }
             composable<SeriesDestination> { Series(viewModel) }
+            composable<ActeursDestination> {Actors(viewModel)}
             /* ajouter ici composable acteurs */
         }
     }
