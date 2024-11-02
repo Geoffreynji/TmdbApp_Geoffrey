@@ -1,5 +1,6 @@
 package com.example.premiereapplication.ui.theme
 
+import FilmDetailsScreen
 import Series
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -50,12 +51,14 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.navigation.compose.NavHost
 
 import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.toRoute
 import kotlinx.serialization.Serializable
 
 @Serializable class ProfilDestination
 @Serializable class FilmsDestination
 @Serializable class SeriesDestination
 @Serializable class ActeursDestination
+@Serializable class FilmsDetails(val id : Int)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,10 +98,14 @@ class MainActivity : ComponentActivity() {
         val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
         val viewModel: MainViewModel = viewModel()
         NavHost(navController = navController, startDestination = ProfilDestination()) {
-            composable<FilmsDestination> { Films(viewModel) }
+            composable<FilmsDestination> { Films(viewModel, navController) }
             composable<ProfilDestination> { Screen(windowSizeClass, navController) }
             composable<SeriesDestination> { Series(viewModel) }
             composable<ActeursDestination> {Actors(viewModel)}
+            composable<FilmsDetails> { backStackEntry ->
+            val filmDetail: FilmsDetails = backStackEntry.toRoute()
+            FilmDetailsScreen(viewModel, filmDetail.id)
+        }
             /* ajouter ici composable acteurs */
         }
     }

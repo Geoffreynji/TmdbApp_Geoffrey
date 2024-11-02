@@ -1,6 +1,7 @@
 package com.example.premiereapplication.ui.theme
 
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface Api {
@@ -20,5 +21,8 @@ interface Api {
     @GET("trending/person/week")  // Endpoint pour récupérer les acteurs
     suspend fun getTrendingActors(@Query("api_key") api_key: String): TmdbActorResult
 
-
+    @GET("movie/{movie_id}")
+    suspend fun getMovieDetails(@Path("movie_id") movieId: Int,
+                                @Query("api_key") apiKey: String
+    ): TmdbMoviesDetails
 }

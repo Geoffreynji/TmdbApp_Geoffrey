@@ -1,17 +1,10 @@
 package com.example.premiereapplication.ui.theme
 
-import android.widget.ImageView
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -21,13 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.window.core.layout.WindowSizeClass
+import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
-import java.text.SimpleDateFormat
-import java.util.Locale
 
 @Composable
-fun Films(viewModel: MainViewModel) {
+fun Films(viewModel: MainViewModel, navController: NavHostController) {
 
     // Collecter les films à partir du ViewModel avec collecte de l'état
     val moviesState = viewModel.movies.collectAsState()
@@ -42,9 +33,7 @@ fun Films(viewModel: MainViewModel) {
     // Affichage de la liste des films
     if (moviesState.value.isEmpty()) {
         Text(text = "Aucun film disponible.")
-    }
-    else
-    {
+    } else {
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(2), // Nombre de colonnes
@@ -58,7 +47,12 @@ fun Films(viewModel: MainViewModel) {
 
                 // Utilisation d'une colonne pour chaque film
                 Column(
-                    modifier = Modifier.padding(16.dp), // Padding autour de chaque film
+                    modifier = Modifier
+                        .padding(16.dp) // Padding autour de chaque film
+                        .clickable {
+                            // Naviguer vers l'écran des détails du film
+                            navController.navigate(FilmsDetails(movie.id))
+                        },
                     horizontalAlignment = Alignment.CenterHorizontally // Centrer les éléments
                 ) {
                     // Image de l'affiche
@@ -84,5 +78,5 @@ fun Films(viewModel: MainViewModel) {
                 }
             }
         }
-}
+    }
 }
