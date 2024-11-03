@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -59,6 +60,7 @@ import kotlinx.serialization.Serializable
 @Serializable class SeriesDestination
 @Serializable class ActeursDestination
 @Serializable class FilmsDetails(val id : Int)
+@Serializable class SeriesDetails(val id : Int)
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -100,13 +102,16 @@ class MainActivity : ComponentActivity() {
         NavHost(navController = navController, startDestination = ProfilDestination()) {
             composable<FilmsDestination> { Films(viewModel, navController) }
             composable<ProfilDestination> { Screen(windowSizeClass, navController) }
-            composable<SeriesDestination> { Series(viewModel) }
+            composable<SeriesDestination> { Series(viewModel, navController) }
             composable<ActeursDestination> {Actors(viewModel)}
             composable<FilmsDetails> { backStackEntry ->
             val filmDetail: FilmsDetails = backStackEntry.toRoute()
             FilmDetailsScreen(viewModel, filmDetail.id)
         }
-            /* ajouter ici composable acteurs */
+            composable<SeriesDetails> { backStackEntry ->
+                val serieDetail: SeriesDetails = backStackEntry.toRoute()
+                SeriesDetailsScreen(viewModel, serieDetail.id)
+            }
         }
     }
 

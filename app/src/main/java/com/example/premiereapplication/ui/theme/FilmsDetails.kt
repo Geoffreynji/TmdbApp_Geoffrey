@@ -1,6 +1,4 @@
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
@@ -8,7 +6,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,11 +19,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.premiereapplication.ui.theme.MainViewModel
+import kotlin.math.floor
 
 @Composable
 fun FilmDetailsScreen(viewModel: MainViewModel, filmId: Int) {
@@ -40,6 +44,9 @@ fun FilmDetailsScreen(viewModel: MainViewModel, filmId: Int) {
             item {
                 // Affiche de l'image du film
                 val posterUrl = "https://image.tmdb.org/t/p/w500${movie.poster_path}"
+
+                //Pour gérer l'espace pris par la top barre
+                Spacer(modifier = Modifier.height(80.dp))
 
                 // Image de l'affiche du film
                 AsyncImage(
@@ -88,33 +95,40 @@ fun FilmDetailsScreen(viewModel: MainViewModel, filmId: Int) {
                 // Langues parlées
                 val spokenLanguages = movie.spoken_languages.joinToString(", ") { it.english_name }
                 Text(
-                    text = "Langues: $spokenLanguages",
+                    text = "Langue(s): $spokenLanguages",
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
 
-                // Note moyenne
-                Text(
-                    text = "Note: ${movie.vote_average} (${movie.vote_count} votes)",
-                    fontStyle = FontStyle.Italic,
-                    modifier = Modifier.padding(vertical = 8.dp)
-                )
+                // Note moyenne avec étoiles
+                val voteAverage = movie.vote_average
+                val ratingOutOfFive = (voteAverage / 2)
+                val fullStars = floor(ratingOutOfFive).toInt()
 
-                // Tagline
-                if (movie.tagline.isNotEmpty()) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                ) {
+                    // Texte de la note
                     Text(
-                        text = "\"${movie.tagline}\"",
-                        style = MaterialTheme.typography.titleSmall,
+                        text = "Note: $voteAverage (${movie.vote_count} votes)",
                         fontStyle = FontStyle.Italic,
-                        modifier = Modifier.padding(vertical = 8.dp)
+                        color = Color.Gray
                     )
+
+                    Spacer(modifier = Modifier.width(8.dp))
+
+                    // Affiche les étoiles pleines en fonction de la note moyenne
+                    repeat(fullStars) {
+                        Icon(
+                            imageVector = Icons.Filled.Star,
+                            contentDescription = "Étoile pleine",
+                            tint = Color(0xFFFFA500)
+                        )
+                    }
                 }
 
-
-                val productionCountries = movie.production_countries.joinToString(", ") { it.name }
-                Text(
-                    text = "Pays de production: $productionCountries",
-                    modifier = Modifier.padding(vertical = 8.dp)
-                )
+                //Pour gérer l'espace pris par la bottom barre
+                Spacer(modifier = Modifier.height(100.dp))
             }
         }
     }
