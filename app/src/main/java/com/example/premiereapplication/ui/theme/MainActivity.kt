@@ -104,7 +104,7 @@ class MainActivity : ComponentActivity() {
                                 }
 
                                 WindowWidthSizeClass.MEDIUM, WindowWidthSizeClass.EXPANDED -> {
-                                    // Ne pas afficher la BottomAppBar, on gère cela dans le contenu
+                                    // Ne pas afficher la BottomAppBar, on gère cela dans le contenu avec innerpadding
                                 }
                             }
                         }
