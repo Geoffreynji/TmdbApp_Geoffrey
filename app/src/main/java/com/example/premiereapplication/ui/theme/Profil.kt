@@ -4,16 +4,23 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -34,10 +41,14 @@ fun Screen(windowClass: WindowSizeClass, navController: NavController) {
             )
             {
                 Image(
-                    painterResource(id = R.drawable.chat),
+                    painter = painterResource(id = R.drawable.chat),
                     contentDescription = "Un chat",
-                    modifier = Modifier.size(400.dp)
+                    modifier = Modifier
+                        .size(300.dp) // Ajuste la taille à tes besoins
+                        .aspectRatio(1f) // Force le ratio 1:1 pour obtenir un carré
+                        .clip(CircleShape) // Découpe l'image en cercle
                 )
+                Spacer(modifier = Modifier.height(50.dp))
                 Text(
                     text = "Geoffrey Naji",
                     style = MaterialTheme.typography.titleLarge,
@@ -65,7 +76,7 @@ fun Screen(windowClass: WindowSizeClass, navController: NavController) {
                 {
                     Icon(
                         painterResource(id = R.drawable.baseline_link_24),
-                        contentDescription = "Un chat",
+                        contentDescription = "linkdedin",
                         modifier = Modifier.size(22.dp)
                     )
                     Text(
@@ -91,7 +102,10 @@ fun Screen(windowClass: WindowSizeClass, navController: NavController) {
                     Image(
                         painterResource(id = R.drawable.chat),
                         contentDescription = "Un chat",
-                        modifier = Modifier.size(300.dp)
+                        modifier = Modifier
+                            .size(300.dp) // Ajuste la taille à tes besoins
+                            .aspectRatio(1f) // Force le ratio 1:1 pour obtenir un carré
+                            .clip(CircleShape) // Découpe l'image en cercle
                     )
 
                     Text(
@@ -146,7 +160,13 @@ fun Screen(windowClass: WindowSizeClass, navController: NavController) {
 
 @Composable
 fun FilledButton(onClick: () -> Unit) {
-    Button(onClick = { onClick() }) {
+    Button(
+        onClick = { onClick() },
+        colors = ButtonDefaults.buttonColors(
+            containerColor = Color(0xFF415622), // Couleur de fond du bouton
+            contentColor = Color.White   // Couleur du texte
+        )
+    ) {
         Text("Démarrer")
     }
 }

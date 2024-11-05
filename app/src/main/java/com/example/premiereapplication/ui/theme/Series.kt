@@ -3,6 +3,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontStyle
@@ -62,7 +64,7 @@ fun SeriesItem(serie: TmdbSeries, navController: NavHostController) {
             },
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
-            containerColor = Color(0xFF435b1e) // Fond noir légèrement transparent
+            containerColor = Color(0xFF749943) // Fond noir légèrement transparent
         ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 8.dp // Élévation pour un léger effet d'ombre
@@ -77,9 +79,10 @@ fun SeriesItem(serie: TmdbSeries, navController: NavHostController) {
                 painter = painter,
                 contentDescription = serie.name,
                 modifier = Modifier
-                    .size(100.dp)
-                    .aspectRatio(0.67f),
-                contentScale = ContentScale.Crop
+                    .size(150.dp) // Ajuste la taille à tes besoins
+                    .aspectRatio(1f) // Force le ratio 1:1 pour obtenir un carré
+                    .clip(CircleShape) // Découpe l'image en cercle
+                //contentScale = ContentScale.Crop
             )
 
             Spacer(modifier = Modifier.width(10.dp))

@@ -48,8 +48,10 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.navigation.compose.NavHost
+import androidx.navigation.NavDestination.Companion.hasRoute
 
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.toRoute
@@ -70,7 +72,9 @@ class MainActivity : ComponentActivity() {
             val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
             val navController = rememberNavController()
             val navBackStackEntry by navController.currentBackStackEntryAsState()
-            //val currentDestination = navBackStackEntry?.ProfilDestination
+
+            // Vérifie si la destination actuelle n'est pas "ProfilDestination"
+            val showBars = navBackStackEntry?.destination?.hasRoute<ProfilDestination>() ?: true
             Screen(windowSizeClass, navController)
             PremiereApplicationTheme {
                 Scaffold(
@@ -78,11 +82,11 @@ class MainActivity : ComponentActivity() {
                     topBar = {
                         //Mettre condition ici pour ne pas afficher barre navigation sur page d'acceuil
                         // Afficher la TopBar sauf si on est sur l'écran "Profil"
-                            MyTopBar(viewModel())
+                        if (!showBars) MyTopBar(viewModel())
                     },
                     bottomBar = {
                         //Mettre condition ici pour ne pas afficher barre navigation sur page d'acceuil
-                            MyBottomBar(navController)
+                        if (!showBars) MyBottomBar(navController)
                     }
                 ) { innerPadding ->
                     AppNavigation(
@@ -131,13 +135,16 @@ class MainActivity : ComponentActivity() {
                         onValueChange = { query ->
                             searchText = TextFieldValue(query)
                             viewModel.searchFilms(query)  // Appel de la recherche dès que l'utilisateur tape
+                            viewModel.searchSeries(query)
+                            viewModel.searchActors(query)
+
                         },
-                        placeholder = { Text("Rechercher un film...") },
+                        placeholder = { Text("Rechercher ...") },
                         colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color(0xFF4CAF50),
-                            unfocusedContainerColor = Color(0xFF81C784),
-                            focusedTextColor = Color(0xFF1B5E20),
-                            unfocusedTextColor = Color(0xFF388E3C)
+                            focusedContainerColor = Color(0xFFdce9ca),
+                            unfocusedContainerColor = Color(0xFF749943),
+                            focusedTextColor = Color(0xFF000000),
+                            unfocusedTextColor = Color(0xFF000000)
                         ),
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -152,13 +159,15 @@ class MainActivity : ComponentActivity() {
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF4CAF50)  // Ajuste selon ton design
+                    containerColor = Color(0xFF415622)  // Ajuste selon ton design
                 )
             )
         } else {
             // Barre normale avec icône de recherche
             TopAppBar(
-                title = { Text("GeoffreyMovies") },  // Titre de l'application
+                title = {
+                    Text("MoviesFlix", color = Color.White, fontStyle = FontStyle.Italic)  // Titre de l'application avec texte en blanc
+                },
                 actions = {
                     // Icône de loupe pour lancer la recherche
                     IconButton(onClick = { isSearchMode = true }) {
@@ -166,7 +175,7 @@ class MainActivity : ComponentActivity() {
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color(0xFF4CAF50)  // Couleur de la barre normale
+                    containerColor = Color(0xFF415622)  // Couleur de la barre normale
                 )
             )
         }
@@ -192,7 +201,7 @@ class MainActivity : ComponentActivity() {
                     }
                 }
             },
-            containerColor = Color(0xFF81C784),
+            containerColor = Color(0xFF415622),
         )
     }
 }

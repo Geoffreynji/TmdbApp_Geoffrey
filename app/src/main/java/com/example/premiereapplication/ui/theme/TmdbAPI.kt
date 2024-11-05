@@ -31,5 +31,20 @@ interface Api {
         @Path("tv_id") tvId: Int,
         @Query("api_key") apiKey: String
     ): TmdbSeriesDetails
+
+    @GET("search/tv")
+    suspend fun searchSeries(
+        @Query("api_key") api_key: String,
+        @Query("query") query: String  // Le titre de la série à rechercher
+    ): TmdbSeriesResult
+
+    @GET("search/person")
+    suspend fun searchActors(
+        @Query("api_key") api_key: String,
+        @Query("query") query: String  // Le nom de l'acteur à rechercher
+    ): TmdbActorResult
+
 }
+
+
 

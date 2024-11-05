@@ -63,6 +63,17 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    fun searchSeries(query: String) {
+        viewModelScope.launch {
+            try {
+                val result = api.searchSeries(apiKey, query)  // Appel réseau pour rechercher la série par titre
+                series.value = result.results                    // Mettre à jour l'état avec les résultats de la recherche
+            } catch (e: Exception) {
+                e.printStackTrace()  // Gestion des erreurs
+            }
+        }
+    }
+
     fun getActors() {
         viewModelScope.launch {
             try {
@@ -70,6 +81,17 @@ class MainViewModel : ViewModel() {
                 actors.value = result.results // Vérifie que result.results est une List<TmdbActor>
             } catch (e: Exception) {
                 e.printStackTrace()
+            }
+        }
+    }
+
+    fun searchActors(query: String) {
+        viewModelScope.launch {
+            try {
+                val result = api.searchActors(apiKey, query)  // Appel réseau pour rechercher l'acteur par nom
+                actors.value = result.results                   // Mettre à jour l'état avec les résultats de la recherche
+            } catch (e: Exception) {
+                e.printStackTrace()  // Gestion des erreurs
             }
         }
     }
