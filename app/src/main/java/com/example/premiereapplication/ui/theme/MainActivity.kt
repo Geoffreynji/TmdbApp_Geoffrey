@@ -6,13 +6,16 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -40,6 +43,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
@@ -55,6 +59,7 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.toRoute
+import androidx.window.core.layout.WindowWidthSizeClass
 import kotlinx.serialization.Serializable
 
 @Serializable class ProfilDestination
@@ -80,19 +85,61 @@ class MainActivity : ComponentActivity() {
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
                     topBar = {
-                        //Mettre condition ici pour ne pas afficher barre navigation sur page d'acceuil
-                        // Afficher la TopBar sauf si on est sur l'écran "Profil"
-                        if (!showBars) MyTopBar(viewModel())
+                        // Afficher la TopBar seulement si l'écran est en portrait
+                        if (!showBars) {
+                            when (windowSizeClass.windowWidthSizeClass) {
+                                WindowWidthSizeClass.COMPACT -> {
+                                    MyTopBar(viewModel())
+                                }
+                            }
+                        }
                     },
                     bottomBar = {
-                        //Mettre condition ici pour ne pas afficher barre navigation sur page d'acceuil
-                        if (!showBars) MyBottomBar(navController)
+                        // Afficher la bottombar en fonction de l'orientation de l'écran
+                        if (!showBars) {
+                            when (windowSizeClass.windowWidthSizeClass) {
+                                WindowWidthSizeClass.COMPACT -> {
+                                    // Afficher la BottomAppBar en mode portrait
+                                    MyBottomBar(navController)
+                                }
+
+                                WindowWidthSizeClass.MEDIUM, WindowWidthSizeClass.EXPANDED -> {
+                                    // Ne pas afficher la BottomAppBar, on gère cela dans le contenu
+                                }
+                            }
+                        }
                     }
                 ) { innerPadding ->
-                    AppNavigation(
-                        navController = navController,
-                        modifier = Modifier.padding(innerPadding) // Applique le padding
-                    )
+                    // Disposition en fonction de la taille de l'écran
+                    when (windowSizeClass.windowWidthSizeClass) {
+                        WindowWidthSizeClass.COMPACT -> {
+                            // Contenu normal
+                            AppNavigation(
+                                navController = navController,
+                                modifier = Modifier.padding(innerPadding) // Applique le padding
+                            )
+                        }
+
+                        WindowWidthSizeClass.MEDIUM, WindowWidthSizeClass.EXPANDED -> {
+                            // En mode paysage, afficher AppNavigation à côté de PaysageBottomBar
+                            Row(
+                                modifier = Modifier
+                                    .padding(innerPadding) // Applique le padding
+                                    .fillMaxSize() // Remplit tout l'espace
+                            ) {
+                                // Afficher PaysageBottomBar
+                                PaysageBottomBar(navController)
+
+                                // Afficher AppNavigation
+                                AppNavigation(
+                                    navController = navController,
+                                    modifier = Modifier
+                                        .padding(innerPadding) // Applique le padding
+                                        .weight(1f) // Permet à AppNavigation de prendre le reste de l'espace
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -107,11 +154,11 @@ class MainActivity : ComponentActivity() {
             composable<FilmsDestination> { Films(viewModel, navController) }
             composable<ProfilDestination> { Screen(windowSizeClass, navController) }
             composable<SeriesDestination> { Series(viewModel, navController) }
-            composable<ActeursDestination> {Actors(viewModel)}
+            composable<ActeursDestination> { Actors(viewModel) }
             composable<FilmsDetails> { backStackEntry ->
-            val filmDetail: FilmsDetails = backStackEntry.toRoute()
-            FilmDetailsScreen(viewModel, filmDetail.id)
-        }
+                val filmDetail: FilmsDetails = backStackEntry.toRoute()
+                FilmDetailsScreen(viewModel, filmDetail.id)
+            }
             composable<SeriesDetails> { backStackEntry ->
                 val serieDetail: SeriesDetails = backStackEntry.toRoute()
                 SeriesDetailsScreen(viewModel, serieDetail.id)
@@ -155,7 +202,11 @@ class MainActivity : ComponentActivity() {
                         isSearchMode = false  // Quitter le mode recherche
                         searchText = TextFieldValue("")  // Réinitialiser le texte de recherche
                     }) {
-                        Icon(Icons.Default.Close, contentDescription = "Fermer la recherche", tint = Color.White)
+                        Icon(
+                            Icons.Default.Close,
+                            contentDescription = "Fermer la recherche",
+                            tint = Color.White
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -166,12 +217,20 @@ class MainActivity : ComponentActivity() {
             // Barre normale avec icône de recherche
             TopAppBar(
                 title = {
-                    Text("MoviesFlix", color = Color.White, fontStyle = FontStyle.Italic)  // Titre de l'application avec texte en blanc
+                    Text(
+                        "MoviesFlix",
+                        color = Color.White,
+                        fontStyle = FontStyle.Italic
+                    )  // Titre de l'application avec texte en blanc
                 },
                 actions = {
                     // Icône de loupe pour lancer la recherche
                     IconButton(onClick = { isSearchMode = true }) {
-                        Icon(Icons.Default.Search, contentDescription = "Rechercher", tint = Color.White)
+                        Icon(
+                            Icons.Default.Search,
+                            contentDescription = "Rechercher",
+                            tint = Color.White
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
@@ -183,11 +242,12 @@ class MainActivity : ComponentActivity() {
 
 
     @Composable
-    fun MyBottomBar(navController: NavHostController) {
+    fun MyBottomBar(navController: NavHostController, ) {
+        // Affichage habituel en mode portrait
         BottomAppBar(
             content = {
                 Row(
-                    modifier = androidx.compose.ui.Modifier.fillMaxWidth(),
+                    modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceEvenly // Espace les boutons uniformément
                 ) {
                     TextButton(onClick = { navController.navigate(FilmsDestination()) }) {
@@ -204,5 +264,27 @@ class MainActivity : ComponentActivity() {
             containerColor = Color(0xFF415622),
         )
     }
-}
 
+    @Composable
+    fun PaysageBottomBar(navController: NavHostController) {
+        // Barre de navigation en mode paysage
+        Column(
+            modifier = Modifier
+                .fillMaxHeight() // Limite la hauteur de la barre
+                .width(80.dp) // Largeur de la barre
+                .background(Color(0xFF415622)), // Couleur de fond de la barre
+            verticalArrangement = Arrangement.SpaceEvenly, // Espace les boutons uniformément
+            horizontalAlignment = Alignment.Start // Alignement à gauche
+        ) {
+            TextButton(onClick = { navController.navigate(FilmsDestination()) }) {
+                Text(text = "Films", color = Color.White)
+            }
+            TextButton(onClick = { navController.navigate(SeriesDestination()) }) {
+                Text(text = "Séries", color = Color.White)
+            }
+            TextButton(onClick = { navController.navigate(ActeursDestination()) }) {
+                Text(text = "Acteurs", color = Color.White)
+            }
+        }
+    }
+}
