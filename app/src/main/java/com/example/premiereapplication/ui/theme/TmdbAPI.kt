@@ -44,6 +44,13 @@ interface Api {
         @Query("query") query: String  // Le nom de l'acteur à rechercher
     ): TmdbActorResult
 
+    //Recherche acteurs dans film
+    @GET("movie/{movie_id}/credits")
+    suspend fun getMovieCredits(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String
+    ): TmdbMovieCreditsResult
+
 }
 
 
