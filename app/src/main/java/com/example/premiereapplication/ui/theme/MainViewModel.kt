@@ -18,6 +18,7 @@ class MainViewModel : ViewModel() {
     val movieDetails = MutableStateFlow<TmdbMoviesDetails?>(null)
     val seriesDetails = MutableStateFlow<TmdbSeriesDetails?>(null)
     val movieCast = MutableStateFlow<List<Cast>>(emptyList())
+    val seriesActors =  MutableStateFlow<List<CastSerie>>(emptyList())
 
 
     // Initialiser Retrofit
@@ -127,6 +128,17 @@ class MainViewModel : ViewModel() {
             try {
                 val result = api.getMovieCredits(movieId, apiKey)
                 movieCast.value = result.cast
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun getSeriesCast(seriesId: Int) {
+        viewModelScope.launch {
+            try {
+                val response = api.getSeriesCredits(seriesId, apiKey)
+                seriesActors.value = response.cast
             } catch (e: Exception) {
                 e.printStackTrace()
             }

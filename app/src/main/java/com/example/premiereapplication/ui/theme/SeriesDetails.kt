@@ -14,10 +14,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import coil.transform.CircleCropTransformation
 import kotlin.math.floor
 import kotlin.math.roundToInt
 
@@ -25,9 +28,11 @@ import kotlin.math.roundToInt
 fun SeriesDetailsScreen(viewModel: MainViewModel, serieId: Int) {
     LaunchedEffect(serieId) {
         viewModel.getSeriesDetails(serieId)
+        viewModel.getSeriesCast(serieId)
     }
 
     val seriesDetails by viewModel.seriesDetails.collectAsState()
+    val seriesActors by viewModel.seriesActors.collectAsState()
 
     LazyColumn(
         modifier = Modifier
@@ -118,10 +123,54 @@ fun SeriesDetailsScreen(viewModel: MainViewModel, serieId: Int) {
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
 
-                //Pour gérer l'espace pris par la bottom barre
+                // Section des acteurs principaux
+                Text(
+                    text = "Acteurs principaux",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(vertical = 8.dp)
+                )
+
+                seriesActors.take(6).chunked(2).forEach { actorPair ->
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        actorPair.forEach { actor ->
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier.weight(1f).padding(end = 8.dp)
+                            ) {
+                                val profileUrl =
+                                    "https://image.tmdb.org/t/p/w200${actor.profile_path}"
+                                AsyncImage(
+                                    model = ImageRequest.Builder(LocalContext.current)
+                                        .data(profileUrl)
+                                        .transformations(CircleCropTransformation()) // Transformation pour une image ronde parfaite
+                                        .build(),
+                                    contentDescription = actor.name,
+                                    modifier = Modifier
+                                        .size(100.dp)
+                                        .padding(end = 8.dp)
+                                )
+
+                                Text(
+                                    text = actor.name,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
+                        }
+                        // Ajouter un espace si la paire n'a qu'un acteur pour équilibrer
+                        if (actorPair.size == 1) {
+                            Spacer(modifier = Modifier.weight(1f))
+                        }
+                    }
+                }
+
                 Spacer(modifier = Modifier.height(100.dp))
+            }
             }
         }
     }
-}
 
