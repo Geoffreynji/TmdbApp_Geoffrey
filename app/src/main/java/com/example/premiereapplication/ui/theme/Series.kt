@@ -4,7 +4,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -12,9 +11,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberImagePainter
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -26,12 +23,9 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
-import com.example.premiereapplication.ui.theme.FilmsDetails
 import com.example.premiereapplication.ui.theme.MainViewModel
 import com.example.premiereapplication.ui.theme.SeriesDetails
-import com.example.premiereapplication.ui.theme.SeriesDetailsScreen
 import com.example.premiereapplication.ui.theme.TmdbSeries
 
 @Composable
@@ -60,7 +54,7 @@ fun SeriesItem(serie: TmdbSeries, navController: NavHostController) {
             .fillMaxWidth()
             .padding(8.dp)
             .clickable {
-                navController.navigate(SeriesDetails(serie.id))
+                navController.navigate(SeriesDetails(serie.id)) //Rendre la card cliquable pour basculer vers l'écran détaillé de la série
             },
         shape = RoundedCornerShape(20.dp),
         colors = CardDefaults.cardColors(
@@ -79,15 +73,14 @@ fun SeriesItem(serie: TmdbSeries, navController: NavHostController) {
                 painter = painter,
                 contentDescription = serie.name,
                 modifier = Modifier
-                    .size(150.dp) // Ajuste la taille à tes besoins
+                    .size(150.dp) // Taille de l'image
                     .aspectRatio(1f) // Force le ratio 1:1 pour obtenir un carré
                     .clip(CircleShape) // Découpe l'image en cercle
-                //contentScale = ContentScale.Crop
             )
 
             Spacer(modifier = Modifier.width(10.dp))
 
-            // Titre de la série et d'autres informations (si disponibles)
+            // Titre de la série et d'autres informations
             Column(
                 modifier = Modifier
                     .align(Alignment.CenterVertically)

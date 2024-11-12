@@ -31,6 +31,7 @@ fun SeriesDetailsScreen(viewModel: MainViewModel, serieId: Int) {
         viewModel.getSeriesCast(serieId)
     }
 
+    //Collecter détails séries et acteurs
     val seriesDetails by viewModel.seriesDetails.collectAsState()
     val seriesActors by viewModel.seriesActors.collectAsState()
 
@@ -95,6 +96,9 @@ fun SeriesDetailsScreen(viewModel: MainViewModel, serieId: Int) {
                 )
 
                 // Affichage de la note moyenne avec étoiles
+                //Ici, j'ai voulu faire un système d'étoile qui prend en compte la note moyenne
+                //Cela fonctionne mais j'aurai aussi pu rajouter les étoiles à moitié pleines (en image) quand le voteaverage n'est pas rond.
+                //Ici uniquement des étoiles pleines s'affichent
                 val voteAverage = series.vote_average
                 val ratingOutOfFive = (voteAverage / 2).roundToInt() // Note sur 5
                 val fullStars = floor(ratingOutOfFive.toDouble()).toInt()
@@ -131,6 +135,7 @@ fun SeriesDetailsScreen(viewModel: MainViewModel, serieId: Int) {
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
 
+                //Limiter l'affichage aux 6 premiers acteurs et les diviser en paires de 2
                 seriesActors.take(6).chunked(2).forEach { actorPair ->
                     Row(
                         modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp),
@@ -144,6 +149,7 @@ fun SeriesDetailsScreen(viewModel: MainViewModel, serieId: Int) {
                             ) {
                                 val profileUrl =
                                     "https://image.tmdb.org/t/p/w200${actor.profile_path}"
+                                //Image de l'acteur
                                 AsyncImage(
                                     model = ImageRequest.Builder(LocalContext.current)
                                         .data(profileUrl)

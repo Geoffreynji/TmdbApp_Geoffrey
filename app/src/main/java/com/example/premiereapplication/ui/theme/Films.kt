@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -30,14 +29,16 @@ fun Films(viewModel: MainViewModel, navController: NavHostController) {
         }
     }
 
-    // Affichage de la liste des films
+
     if (moviesState.value.isEmpty()) {
         Text(text = "Aucun film disponible.")
-    } else {
+    }
+    // Affichage de la liste des films
+    else {
 
         LazyVerticalGrid(
             columns = GridCells.Fixed(2), // Nombre de colonnes
-            modifier = Modifier.padding(16.dp) // Ajout de padding
+            modifier = Modifier.padding(16.dp) // Ajout de padding entre chaque colonnes
         ) {
             items(moviesState.value.size) { index ->
                 val movie = moviesState.value[index]

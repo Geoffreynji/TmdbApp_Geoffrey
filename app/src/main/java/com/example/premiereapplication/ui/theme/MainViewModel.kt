@@ -1,17 +1,15 @@
 package com.example.premiereapplication.ui.theme
 
-
-import android.graphics.Movie
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 class MainViewModel : ViewModel() {
 
+    //Définition de mutablestateflow, permet de stocker un état réactif et observable
     val movies = MutableStateFlow<List<TmdbMovie>>(listOf())
     val series = MutableStateFlow<List<TmdbSeries>>(listOf())
     val actors = MutableStateFlow<List<TmdbActor>>(listOf())
@@ -98,6 +96,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    //Récupérer les détails spécifiques d'un film
     fun getMovieDetails(movieId: Int) {
         viewModelScope.launch {
             try {
@@ -109,6 +108,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    //Récupérer les détails des séries
     fun getSeriesDetails(serieId: Int) {
         viewModelScope.launch {
             try {
@@ -123,6 +123,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    //Récupérer acteurs qui ont joué dans un film spécifique (movieId)
     fun getMovieCast(movieId: Int) {
         viewModelScope.launch {
             try {
@@ -134,6 +135,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    //Récupérer acteurs qui ont joué dans un film spécifique (seriesId)
     fun getSeriesCast(seriesId: Int) {
         viewModelScope.launch {
             try {

@@ -33,6 +33,7 @@ import com.example.premiereapplication.R
 fun Screen(windowClass: WindowSizeClass, navController: NavController) {
     when (windowClass.windowWidthSizeClass)
     {
+        //Si écran portrait
         WindowWidthSizeClass.COMPACT -> {
             Column(
                 modifier = Modifier.fillMaxSize(),
@@ -44,7 +45,7 @@ fun Screen(windowClass: WindowSizeClass, navController: NavController) {
                     painter = painterResource(id = R.drawable.chat),
                     contentDescription = "Un chat",
                     modifier = Modifier
-                        .size(300.dp) // Ajuste la taille à tes besoins
+                        .size(300.dp) //Taille de l'image
                         .aspectRatio(1f) // Force le ratio 1:1 pour obtenir un carré
                         .clip(CircleShape) // Découpe l'image en cercle
                 )
@@ -90,6 +91,7 @@ fun Screen(windowClass: WindowSizeClass, navController: NavController) {
                 })
             }
         }
+        //Si écran paysage
         else -> {
             Row(
                 modifier = Modifier.fillMaxSize(),
@@ -148,6 +150,7 @@ fun Screen(windowClass: WindowSizeClass, navController: NavController) {
                             modifier = Modifier.padding(10.dp)
                         )
                     }
+                    //Bouton démarrer à destination de la page film
                     FilledButton(onClick = {
                         navController.navigate(FilmsDestination())
                     })
@@ -158,6 +161,7 @@ fun Screen(windowClass: WindowSizeClass, navController: NavController) {
     }
 }
 
+//Composant bouton
 @Composable
 fun FilledButton(onClick: () -> Unit) {
     Button(

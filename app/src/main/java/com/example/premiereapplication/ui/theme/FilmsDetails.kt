@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
@@ -21,7 +20,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
@@ -35,7 +33,7 @@ import kotlin.math.floor
 
 @Composable
 fun FilmDetailsScreen(viewModel: MainViewModel, filmId: Int) {
-    // Charger les détails du film au démarrage
+    // Charger les détails du film au démarrage ainsi que les acteurs du film selectionné
     LaunchedEffect(filmId) {
         viewModel.getMovieDetails(filmId)
         viewModel.getMovieCast(filmId)
@@ -46,15 +44,17 @@ fun FilmDetailsScreen(viewModel: MainViewModel, filmId: Int) {
     // Récupérer acteurs qui ont joué dans le film
     val movieCast by viewModel.movieCast.collectAsState()
 
-    LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(16.dp)
-    ) {
+    //Afficher détails du film dans une même colonne
+        LazyColumn(
+            modifier = Modifier.fillMaxSize().padding(16.dp) // Occupe tout l’espace (largeur, hauteur) avec une marge de 16 dp sur les bords
+        ) {
         movieDetails?.let { movie ->
             item {
+                //Récupérer image du film
                 val posterUrl = "https://image.tmdb.org/t/p/w500${movie.poster_path}"
 
                 Spacer(modifier = Modifier.height(80.dp))
-
+                //Affichage image
                 AsyncImage(
                     model = posterUrl,
                     contentDescription = movie.title,
@@ -64,6 +64,7 @@ fun FilmDetailsScreen(viewModel: MainViewModel, filmId: Int) {
                         .padding(bottom = 16.dp)
                 )
 
+                //Titre du film
                 Text(
                     text = movie.title,
                     style = MaterialTheme.typography.titleLarge,
@@ -71,12 +72,13 @@ fun FilmDetailsScreen(viewModel: MainViewModel, filmId: Int) {
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
 
+                //Synopsis
                 Text(
                     text = movie.overview,
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
-
+                //Affichage date de sortie + durée sur même ligne
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween
@@ -88,18 +90,21 @@ fun FilmDetailsScreen(viewModel: MainViewModel, filmId: Int) {
                     Text(text = "Durée: ${movie.runtime} min", fontWeight = FontWeight.Bold)
                 }
 
+                //Genres
                 val genreNames = movie.genres.joinToString(", ") { it.name }
                 Text(
                     text = "Genres: $genreNames",
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
-
+                //Langues disponibles
                 val spokenLanguages = movie.spoken_languages.joinToString(", ") { it.english_name }
                 Text(
                     text = "Langue(s): $spokenLanguages",
                     modifier = Modifier.padding(vertical = 8.dp)
                 )
-
+                //Ici, j'ai voulu faire un système d'étoile qui prend en compte la note moyenne
+                //Cela fonctionne mais j'aurai aussi pu rajouter les étoiles à moitié pleines (en image) quand le voteaverage n'est pas rond.
+                //Ici uniquement des étoiles pleines s'affichent
                 val voteAverage = movie.vote_average
                 val ratingOutOfFive = (voteAverage / 2)
                 val fullStars = floor(ratingOutOfFive).toInt()
@@ -108,6 +113,7 @@ fun FilmDetailsScreen(viewModel: MainViewModel, filmId: Int) {
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier.padding(vertical = 8.dp)
                 ) {
+                    //Note moyenne
                     Text(
                         text = "Note: $voteAverage (${movie.vote_count} votes)",
                         fontStyle = FontStyle.Italic,
@@ -116,6 +122,7 @@ fun FilmDetailsScreen(viewModel: MainViewModel, filmId: Int) {
 
                     Spacer(modifier = Modifier.width(8.dp))
 
+                    //Affichae étoiles pleines en fonction de la note
                     repeat(fullStars) {
                         Icon(
                             imageVector = Icons.Filled.Star,
@@ -160,6 +167,7 @@ fun FilmDetailsScreen(viewModel: MainViewModel, filmId: Int) {
                                         .padding(end = 8.dp)
                                 )
 
+                                //Nom de l'acteur
                                 Text(
                                     text = actor.name,
                                     fontWeight = FontWeight.SemiBold
