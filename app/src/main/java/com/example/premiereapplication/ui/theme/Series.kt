@@ -38,8 +38,10 @@ fun Series(viewModel: MainViewModel, navController: NavHostController) {
     // Récupérer la liste des séries
     val series by viewModel.series.collectAsState()
 
-    // Liste des séries avec LazyColumn
-    LazyColumn(modifier = Modifier.padding(10.dp)) {
+    LazyColumn(
+        modifier = Modifier
+            .padding(start = 16.dp, end = 16.dp, top = 75.dp, bottom = 80.dp) //Ajoute un padding en haut et bas pour que tous les items soient dans le cadre
+    ) {
         items(series) { serie ->
             SeriesItem(serie, navController)
         }

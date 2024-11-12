@@ -39,7 +39,7 @@ fun Actors(viewModel: MainViewModel) {
     // Grille des acteurs avec LazyVerticalGrid
     LazyVerticalGrid(
         columns = GridCells.Fixed(2), // 2 colonnes
-        modifier = Modifier.padding(10.dp)
+        modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 100.dp, bottom = 90.dp) //Ajoute un padding en haut et bas pour que tous les items soient dans le cadre
     ) {
         items(actors) { actor ->
             ActorItem(actor) // Appel à un composant personnalisé pour afficher chaque acteur

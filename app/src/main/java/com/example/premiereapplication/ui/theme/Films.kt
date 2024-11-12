@@ -35,11 +35,12 @@ fun Films(viewModel: MainViewModel, navController: NavHostController) {
     }
     // Affichage de la liste des films
     else {
-
         LazyVerticalGrid(
-            columns = GridCells.Fixed(2), // Nombre de colonnes
-            modifier = Modifier.padding(16.dp) // Ajout de padding entre chaque colonnes
-        ) {
+            columns = GridCells.Fixed(2),
+            modifier = Modifier
+                .padding(start = 16.dp, end = 16.dp, top = 75.dp, bottom = 80.dp) // Ajoute un padding en haut et bas pour que tous les items soient dans le cadre
+        ){
+
             items(moviesState.value.size) { index ->
                 val movie = moviesState.value[index]
 
