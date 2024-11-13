@@ -16,7 +16,8 @@ class MainViewModel : ViewModel() {
     val movieDetails = MutableStateFlow<TmdbMoviesDetails?>(null)
     val seriesDetails = MutableStateFlow<TmdbSeriesDetails?>(null)
     val movieCast = MutableStateFlow<List<Cast>>(emptyList())
-    val seriesActors =  MutableStateFlow<List<CastSerie>>(emptyList())
+    val seriesActors = MutableStateFlow<List<CastSerie>>(emptyList())
+    val collections = MutableStateFlow<List<Result>>(emptyList())
 
 
     // Initialiser Retrofit
@@ -37,14 +38,18 @@ class MainViewModel : ViewModel() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-    }
+        }
     }
 
     fun searchFilms(query: String) {
         viewModelScope.launch {
             try {
-                val result = api.searchMovies(apiKey, query)  // Appel réseau pour rechercher le film par titre
-                movies.value = result.results                 // Mettre à jour l'état avec les résultats de la recherche
+                val result = api.searchMovies(
+                    apiKey,
+                    query
+                )  // Appel réseau pour rechercher le film par titre
+                movies.value =
+                    result.results                 // Mettre à jour l'état avec les résultats de la recherche
             } catch (e: Exception) {
                 e.printStackTrace()  // Gestion des erreurs
             }
@@ -66,8 +71,12 @@ class MainViewModel : ViewModel() {
     fun searchSeries(query: String) {
         viewModelScope.launch {
             try {
-                val result = api.searchSeries(apiKey, query)  // Appel réseau pour rechercher la série par titre
-                series.value = result.results                    // Mettre à jour l'état avec les résultats de la recherche
+                val result = api.searchSeries(
+                    apiKey,
+                    query
+                )  // Appel réseau pour rechercher la série par titre
+                series.value =
+                    result.results                    // Mettre à jour l'état avec les résultats de la recherche
             } catch (e: Exception) {
                 e.printStackTrace()  // Gestion des erreurs
             }
@@ -77,7 +86,8 @@ class MainViewModel : ViewModel() {
     fun getActors() {
         viewModelScope.launch {
             try {
-                val result = api.getTrendingActors(apiKey)  // Méthode d'API pour récupérer les acteurs
+                val result =
+                    api.getTrendingActors(apiKey)  // Méthode d'API pour récupérer les acteurs
                 actors.value = result.results // Vérifie que result.results est une List<TmdbActor>
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -88,8 +98,12 @@ class MainViewModel : ViewModel() {
     fun searchActors(query: String) {
         viewModelScope.launch {
             try {
-                val result = api.searchActors(apiKey, query)  // Appel réseau pour rechercher l'acteur par nom
-                actors.value = result.results                   // Mettre à jour l'état avec les résultats de la recherche
+                val result = api.searchActors(
+                    apiKey,
+                    query
+                )  // Appel réseau pour rechercher l'acteur par nom
+                actors.value =
+                    result.results                   // Mettre à jour l'état avec les résultats de la recherche
             } catch (e: Exception) {
                 e.printStackTrace()  // Gestion des erreurs
             }
@@ -143,6 +157,22 @@ class MainViewModel : ViewModel() {
                 seriesActors.value = response.cast
             } catch (e: Exception) {
                 e.printStackTrace()
+            }
+        }
+    }
+
+    //Partie exam
+    // Méthode pour rechercher des collections par mot-clé
+    fun searchCollections(query: String) {
+        viewModelScope.launch {
+            try {
+                val result = api.searchCollections(
+                    apiKey,
+                    query
+                )
+            collections.value = result.results// Appel réseau pour rechercher l'acteur par nom
+            } catch (e: Exception) {
+                e.printStackTrace()  // Gestion des erreurs
             }
         }
     }

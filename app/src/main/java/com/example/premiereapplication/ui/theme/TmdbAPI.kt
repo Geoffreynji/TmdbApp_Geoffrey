@@ -66,6 +66,14 @@ interface Api {
         @Query("api_key") apiKey: String
     ): TmdbSerieCreditsResult
 
+    //Partie exam :
+
+    // Nouvelle méthode pour rechercher des collections avec un mot-clé
+    @GET("search/collection")
+    suspend fun searchCollections(
+        @Query("api_key") api_key: String,  // Clé API
+        @Query("query")  query : String // Mot-clé de recherche
+    ): examClass
 }
 
 
