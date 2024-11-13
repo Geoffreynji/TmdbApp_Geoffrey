@@ -14,10 +14,12 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -60,6 +62,7 @@ import kotlinx.serialization.Serializable
 @Serializable class ActeursDestination
 @Serializable class FilmsDetails(val id : Int)
 @Serializable class SeriesDetails(val id : Int)
+@Serializable class NewComposant()
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -155,6 +158,7 @@ class MainActivity : ComponentActivity() {
                 val serieDetail: SeriesDetails = backStackEntry.toRoute()
                 SeriesDetailsScreen(viewModel, serieDetail.id)
             }
+            composable<NewComposant> { ComposantExam() } //Ajout du nouveau composant dans la route
         }
     }
 
@@ -251,7 +255,11 @@ class MainActivity : ComponentActivity() {
                     TextButton(onClick = { navController.navigate(ActeursDestination()) }) {
                         Text(text = "Acteurs", color = Color.White)
                     }
-                }
+
+                    TextButton(onClick = { navController.navigate(NewComposant()) }) {
+                                Text(text = "Exam", color = Color.White)
+                            }
+                        }
             },
             containerColor = Color(0xFF415622),
         )
