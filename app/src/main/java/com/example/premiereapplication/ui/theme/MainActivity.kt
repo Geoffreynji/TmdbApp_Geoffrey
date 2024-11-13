@@ -158,7 +158,7 @@ class MainActivity : ComponentActivity() {
                 val serieDetail: SeriesDetails = backStackEntry.toRoute()
                 SeriesDetailsScreen(viewModel, serieDetail.id)
             }
-            composable<NewComposant> { ComposantExam() } //Ajout du nouveau composant dans la route
+            composable<NewComposant> { ComposantExam(viewModel, navController) } //Ajout du nouveau composant dans la route
         }
     }
 
